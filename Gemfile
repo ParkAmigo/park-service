@@ -71,8 +71,8 @@ group :development do
   gem 'rubocop-capybara', require: false
   gem 'rubocop-factory_bot', require: false
   gem 'rubocop-rake', require: false
-  gem 'bundler-audit', '~> 0.9.1', require: false
-  gem 'ruby_audit', '~> 2.0', require: false
+  gem 'bundler-audit', require: false
+  gem 'ruby_audit', require: false
 end
 
 group :test do

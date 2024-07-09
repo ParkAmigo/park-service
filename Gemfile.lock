@@ -304,7 +304,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   brakeman
-  bundler-audit (~> 0.9.1)
+  bundler-audit
   capybara
   debug
   importmap-rails
@@ -321,7 +321,7 @@ DEPENDENCIES
   rubocop-rake
   rubocop-rspec
   rubocop-rspec_rails
-  ruby_audit (~> 2.0)
+  ruby_audit
   selenium-webdriver
   spring
   sprockets-rails
