@@ -7,9 +7,9 @@ RSpec.describe AuthenticationService do
     let(:mobile_number) { '9288402094' }
     let(:otp) { '299493' }
 
-    context 'When there is no matching record in OtpRequest for the given mobile number and otp combination' do
-      it 'should return error' do
-        service = AuthenticationService.new(mobile_number, otp)
+    context 'when there is no matching record in OtpRequest for the given mobile number and otp combination' do
+      it 'returns an error' do
+        service = described_class.new(mobile_number, otp)
         response = service.process
 
         expect(response.token).to be_nil
@@ -17,11 +17,13 @@ RSpec.describe AuthenticationService do
       end
     end
 
-    context 'When there exists an OtpRequest record for the given mobile number and otp but it is expired' do
-      let!(:otp_request) { create(:otp_request, mobile_number: mobile_number, otp: otp, expire_at: 5.hours.ago) }
+    context 'when there exists an OtpRequest record for the given mobile number and otp but it is expired' do
+      before do
+        create(:otp_request, mobile_number: mobile_number, otp: otp, expire_at: 5.hours.ago)
+      end
 
-      it 'should return error' do
-        service = AuthenticationService.new(mobile_number, otp)
+      it 'returns an error' do
+        service = described_class.new(mobile_number, otp)
         response = service.process
 
         expect(response.token).to be_nil
@@ -29,16 +31,18 @@ RSpec.describe AuthenticationService do
       end
     end
 
-    context 'When a OTP verification is successful' do
-      let!(:otp_request) { create(:otp_request, mobile_number: mobile_number, otp: otp, expire_at: 10.minutes.from_now) }
+    context 'when the OTP verification is successful' do
+      before do
+        create(:otp_request, mobile_number: mobile_number, otp: otp, expire_at: 10.minutes.from_now)
+      end
 
-      context 'and a user record with the mobile number does not exists' do
-        it 'should create a user and return the JWT token generated' do
-          service = AuthenticationService.new(mobile_number, otp)
+      context 'with no user record present in db having the given mobile number' do
+        it 'creates a user and return the JWT token generated' do
+          service = described_class.new(mobile_number, otp)
           response = nil
           expect do
             response = service.process
-          end.to change { User.count }.by(1)
+          end.to change(User, :count).by(1)
 
           expect(response.token).not_to be_nil
 
@@ -47,15 +51,17 @@ RSpec.describe AuthenticationService do
         end
       end
 
-      context 'and a user record with the mobile number already exist in db' do
-        let!(:user) { create(:user, mobile_number: mobile_number) }
+      context 'with a user record present in db having the given mobile number' do
+        before do
+          create(:user, mobile_number: mobile_number)
+        end
 
-        it 'should not create a new user and return the JWT token generated' do
-          service = AuthenticationService.new(mobile_number, otp)
+        it 'does not create a new user and simply return the JWT token generated' do
+          service = described_class.new(mobile_number, otp)
           response = nil
           expect do
             response = service.process
-          end.to change { User.count }.by(0)
+          end.not_to change(User, :count)
 
           expect(response.token).not_to be_nil
 

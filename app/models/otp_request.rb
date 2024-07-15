@@ -10,6 +10,6 @@ class OtpRequest < ApplicationRecord
   validates :mobile_number, format: { with: VALID_MOBILE_NUMBER_REGEX }, length: { is: MOBILE_NUMBER_LENGTH }
 
   def expired?
-    expire_at && expire_at < Time.now
+    expire_at && expire_at < Time.zone.now
   end
 end

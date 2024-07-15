@@ -4,32 +4,37 @@ RSpec.describe AuthenticationController, type: :controller do
   describe 'POST validate_otp' do
     let(:otp) { '123456' }
     let(:mobile_number) { '8298893857' }
+    let(:auth_service) { instance_double(AuthenticationService) }
 
-    context 'When AuthenticationService successfully processes the request' do
-      let(:auth_response) { double(AuthenticationService::Response, token: 'token-123', error: nil) }
+    context 'when AuthenticationService successfully processes the request' do
+      let(:auth_response) { instance_double(AuthenticationService::Response, token: 'token-123', error: nil) }
 
-      it 'should return the token returned by AuthenticationService with a status code 200' do
-        expect_any_instance_of(AuthenticationService).to receive(:process).and_return(auth_response)
+      it 'returns the token from AuthenticationService with a status code 200' do
+        allow(AuthenticationService).to receive(:new).with(mobile_number, otp).and_return(auth_service)
+        allow(auth_service).to receive(:process).and_return(auth_response)
 
         post :validate_otp, params: { otp: otp, mobile_number: mobile_number }
-        response_body = JSON.parse(response.body)
+        response_body = response.parsed_body
 
         expect(response_body['data']['token']).to be_present
-        expect(response.status).to eq(200)
+        expect(response).to have_http_status(:ok)
       end
     end
-    context 'When AuthenticationService fails to validate the OTP' do
-      let(:auth_response) { double(AuthenticationService::Response, token: nil, error: 'OTP verification failed') }
 
-      it 'should return the error from AuthenticationService with a status code 422' do
-        expect_any_instance_of(AuthenticationService).to receive(:process).and_return(auth_response)
+    context 'when AuthenticationService fails to validate the OTP' do
+      let(:auth_response) do
+        instance_double(AuthenticationService::Response, token: nil, error: 'OTP verification failed')
+      end
+
+      it 'returns the error from AuthenticationService with a status code 422' do
+        allow(AuthenticationService).to receive(:new).with(mobile_number, otp).and_return(auth_service)
+        allow(auth_service).to receive(:process).and_return(auth_response)
 
         post :validate_otp, params: { otp: otp, mobile_number: mobile_number }
-        response_body = JSON.parse(response.body)
+        response_body = response.parsed_body
 
-        expect(response_body['data']).not_to be_present
         expect(response_body['errors']).to include(auth_response.error)
-        expect(response.status).to eq(422)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end

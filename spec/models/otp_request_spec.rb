@@ -84,12 +84,12 @@ RSpec.describe OtpRequest, type: :model do
 
   describe '#expired' do
     it 'should return true if the otp is expired' do
-      otp = FactoryBot.build(:otp_request, mobile_number: '9898987987', otp: '678678', expire_at: 10.minutes.ago)
+      otp = build(:otp_request, mobile_number: '9898987987', otp: '678678', expire_at: 10.minutes.ago)
       expect(otp).to be_expired
     end
 
     it 'should return false if the otp is not expired' do
-      otp = FactoryBot.build(:otp_request, mobile_number: '9898987987', otp: '678678', expire_at: 10.minutes.from_now)
+      otp = build(:otp_request, mobile_number: '9898987987', otp: '678678', expire_at: 10.minutes.from_now)
       expect(otp).not_to be_expired
     end
   end
