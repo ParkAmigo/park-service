@@ -3,4 +3,5 @@ config/master.key
 tmp/
 log/
 config/database.yml
+.env
 
