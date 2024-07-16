@@ -40,7 +40,7 @@ class AuthenticationService
   end
 
   def find_or_create_user!
-    User.where(mobile_number: mobile_number).first_or_create!
+    User.find_or_create_by!(mobile_number: mobile_number)
   end
 
   def response_for_expired_otp

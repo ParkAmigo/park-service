@@ -4,12 +4,13 @@ require 'rails_helper'
 
 RSpec.describe AuthenticationService do
   describe '#process' do
+    subject(:service) { described_class.new(mobile_number, otp) }
+
     let(:mobile_number) { '9288402094' }
     let(:otp) { '299493' }
 
     context 'when there is no matching record in OtpRequest for the given mobile number and otp combination' do
       it 'returns an error' do
-        service = described_class.new(mobile_number, otp)
         response = service.process
 
         expect(response.token).to be_nil
@@ -23,7 +24,6 @@ RSpec.describe AuthenticationService do
       end
 
       it 'returns an error' do
-        service = described_class.new(mobile_number, otp)
         response = service.process
 
         expect(response.token).to be_nil
@@ -38,7 +38,6 @@ RSpec.describe AuthenticationService do
 
       context 'with no user record present in db having the given mobile number' do
         it 'creates a user and return the JWT token generated' do
-          service = described_class.new(mobile_number, otp)
           response = nil
           expect do
             response = service.process
@@ -57,7 +56,6 @@ RSpec.describe AuthenticationService do
         end
 
         it 'does not create a new user and simply return the JWT token generated' do
-          service = described_class.new(mobile_number, otp)
           response = nil
           expect do
             response = service.process

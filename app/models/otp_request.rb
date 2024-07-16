@@ -7,7 +7,8 @@ class OtpRequest < ApplicationRecord
   MOBILE_NUMBER_LENGTH = 10
 
   validates :otp, presence: true, numericality: { only_integer: true }, length: { is: OTP_LENGTH }
-  validates :mobile_number, format: { with: VALID_MOBILE_NUMBER_REGEX }, length: { is: MOBILE_NUMBER_LENGTH }
+  validates :mobile_number, presence: true, format: { with: VALID_MOBILE_NUMBER_REGEX },
+                            length: { is: MOBILE_NUMBER_LENGTH }
 
   def expired?
     expire_at && expire_at < Time.zone.now
