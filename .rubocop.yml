@@ -8,5 +8,17 @@ require:
   - rubocop-factory_bot
   - rubocop-rspec_rails
 
+# Disable the Style/Documentation cop
+Style/Documentation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 20
+Style/HashSyntax:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 4
+
 AllCops:
   NewCops: enable
