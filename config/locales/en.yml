@@ -31,3 +31,4 @@
 
 en:
   hello: "Hello world"
+  is_invalid: 'is Invalid'

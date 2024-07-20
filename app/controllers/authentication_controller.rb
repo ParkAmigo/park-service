@@ -1,5 +1,5 @@
 class AuthenticationController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  skip_before_action :authenticate_request
   def validate_otp
     service = AuthenticationService.new(params[:mobile_number], params[:otp])
     response = service.process

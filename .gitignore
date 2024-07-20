@@ -4,5 +4,5 @@ tmp/
 log/
 config/database.yml
 .env
-
 coverage
+.byebug_history
