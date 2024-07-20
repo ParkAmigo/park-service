@@ -1,5 +1,10 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
+require 'simplecov'
+
+SimpleCov.start 'rails'
+SimpleCov.minimum_coverage(ENV.fetch('MIN_CODE_COVERAGE', 0).to_i)
+SimpleCov.maximum_coverage_drop(ENV.fetch('MAX_CODE_COVERAGE_DROP', 0).to_i)
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
