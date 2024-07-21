@@ -1,12 +1,14 @@
 class UsersController < ApplicationController
   def update
-    user = User.find_by(id: params[:id])
-    return render json: { errors: ['User not found'] }, status: :not_found unless user
+    unless current_user.id.to_s == params[:id]
+      return render json: { error: t('json_errors.unauthorized') },
+                    status: :unauthorized
+    end
 
-    if user.update(users_params)
-      render json: { user: user }, status: :ok
+    if current_user.update(users_params)
+      render json: { data: { user: current_user } }, status: :ok
     else
-      render json: { errors: [user.errors.full_messages.join(', ')] }, status: :unprocessable_entity
+      render json: { errors: [current_user.errors.full_messages.to_sentence] }, status: :unprocessable_entity
     end
   end
 

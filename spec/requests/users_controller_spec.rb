@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
   let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
   let(:valid_attributes) { { first_name: 'John', last_name: 'Doe', email: 'john.doe@example.com' } }
   let(:invalid_attributes) { { email: 'invalid_email' } }
   let(:token) { 'valid.token.here' }
@@ -30,11 +31,11 @@ RSpec.describe UsersController, type: :controller do
         request.headers['Authorization'] = "Bearer #{token}"
       end
 
-      context 'when user is not found' do
-        it 'returns not found status' do
-          put :update, params: { id: 'nonexistent', user: valid_attributes }
-          expect(response).to have_http_status(:not_found)
-          expect(response.body).to include('errors')
+      context 'when user is not authorized' do
+        it 'returns unauthorized status' do
+          put :update, params: { id: other_user.id, user: valid_attributes }
+          expect(response).to have_http_status(:unauthorized)
+          expect(response.body).to include('Unauthorized')
         end
       end
 
@@ -69,12 +70,12 @@ RSpec.describe UsersController, type: :controller do
         it 'returns unprocessable entity status and error messages' do
           allow(User).to receive(:find_by).and_return(user)
           allow(user).to receive(:update).and_return(false)
-          allow(user.errors).to receive(:full_messages).and_return(['Error message'])
+          allow(user.errors).to receive(:full_messages).and_return(['Error message1', 'Error message2'])
 
           put :update, params: { id: user.id, user: valid_attributes }
           user.reload
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.parsed_body['errors']).to include('Error message')
+          expect(response.parsed_body['errors']).to include('Error message1 and Error message2')
         end
       end
     end
