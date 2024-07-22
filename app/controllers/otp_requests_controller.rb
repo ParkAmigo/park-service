@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class OtpRequestsController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  skip_before_action :authenticate_request
 
   def create
     otp_request = OtpRequest.new(mobile_number: params[:mobile_number],

@@ -80,6 +80,7 @@ group :development do
   # Security audit
   gem 'brakeman', require: false
   gem 'bundler-audit', require: false
+  gem 'byebug'
   gem 'ruby_audit', require: false
 end
 
@@ -89,6 +90,7 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers", '= 5.3.0'
   gem 'rspec-rails', '~> 6.1.0'
+  gem 'rails-controller-testing'
   gem 'shoulda-matchers', '~> 6.0'
   gem 'simplecov', require: false
 end

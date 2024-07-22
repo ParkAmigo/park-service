@@ -35,7 +35,7 @@ class AuthenticationService
 
   def generate_token_response(user)
     token = JWT.encode({ mobile_number: user.mobile_number, exp: OTP_EXPIRY_IN_HOURS.hours.from_now.to_i },
-                       Rails.application.secrets.jwt_private_key)
+                       Rails.application.credentials.jwt_private_key)
     Response.new(token, nil)
   end
 

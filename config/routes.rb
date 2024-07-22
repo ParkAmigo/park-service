@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   resource :otp_requests, only: [:create]
+  resources :users, only: [:update]
 
   post '/validate_otp', to: 'authentication#validate_otp'
 end
