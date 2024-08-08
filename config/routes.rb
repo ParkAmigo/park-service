@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # root "articles#index"
   resource :otp_requests, only: [:create]
   resources :users, only: [:update]
+  resources :parking_lots, except: [:index]
 
   post '/validate_otp', to: 'authentication#validate_otp'
 end

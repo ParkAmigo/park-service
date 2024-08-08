@@ -30,13 +30,15 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  hello: 'Hello world'
 
   activerecord:
     errors:
       messages:
-        is_invalid: "is Invalid"
-
+        is_invalid: 'is Invalid'
+        must_be_a_valid_indian_pin_code: 'Must be a valid Indian PIN code'
+        already_have_parking_lot_at_this_location: 'You already have a parking lot at this location.'
+        must_be_unique_within_this_parking_lot: 'must be unique within this parking lot.'
   json_errors:
     unauthorized: 'Unauthorized'
     token_has_expired: 'Token has expired'
